@@ -14,6 +14,7 @@ var line1, line2, line3, line4, line5, line6;
 var ball;
 var player1, ImgP1, player2, ImgP2;
 var link;
+var rope;
 
 function preload(){
 
@@ -39,15 +40,19 @@ function setup() {
   line5.visible=false;
   line6=createSprite(575,325,5,100);
   line6.visible=false;
+  rope = new Rope(1,{x: 305, y: 200});
+  
 
-  var ball_options = {
+  /*var ball_options = {
 
    restitution: 0.90,
    isStatic: true
 
-  }
-  ball=Bodies.circle(305,200,13, ball_options);
-  World.add(world, ball);
+  }*/
+  ball=Bodies.circle(305,200,13);
+
+  link = new Link(rope, ball);
+  Matter.Composite.add(rope.body,ball);
 
   player1=createSprite(150,200, 40, 40);
   player1.addImage("jogador1", ImgP1);
@@ -68,16 +73,18 @@ function draw() {
   fill("yellow");
   ellipse(ball.position.x, ball.position.y,13);
 
-  if(collide(ball, player1)==true) {
-
-    link = new Link(ball, player1);
+  //if(collide(ball, player1)==true) {
 
 
 
-  }
+
+
+  //}
   
   controls();
   collide(ball, player1);
+
+  rope.show();
 
   drawSprites();
 }
