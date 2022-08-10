@@ -40,20 +40,20 @@ function setup() {
   line5.visible=false;
   line6=createSprite(575,325,5,100);
   line6.visible=false;
-  rope = new Rope(1,{x: 305, y: 200});
+  rope = new Rope(3,{x: 300, y: 10});
   
 
-  /*var ball_options = {
+  var ball_options = {
 
-   restitution: 0.90,
-   isStatic: true
+   restitution: 0.1,
+   density:0.005
 
-  }*/
-  ball=Bodies.circle(305,200,13);
-
-  link = new Link(rope, ball);
+  }
+  ball=Bodies.circle(305,250,13, ball_options);
   Matter.Composite.add(rope.body,ball);
-
+  
+  link = new Link(rope, ball);
+  
   player1=createSprite(150,200, 40, 40);
   player1.addImage("jogador1", ImgP1);
   player1.scale=0.11;
@@ -71,52 +71,47 @@ function draw() {
   image(bgIMG, 300,200, width, height);
   stroke("gray");
   fill("yellow");
+
+  if(ball!=null){
+    player1.addImage("jogador1", ImgP1);
+    player2.addImage("jogador2", ImgP2);
+  }
+
   ellipse(ball.position.x, ball.position.y,13);
 
-  //if(collide(ball, player1)==true) {
+  
+  if(collide(ball, player1)==true) {
+    console.log("encostou")
+    drop();
+  }
 
-
-
-
-
-  //}
   
   controls();
-  collide(ball, player1);
 
-  rope.show();
+  //collide(ball, player1);
+  //rope.show();
 
   drawSprites();
 }
 
-function kickBall(){
 
-Matter.Body.applyForce(ball, {x: 0, y: 0}, {x: 0.5, y: 2.0});
-
-}
 
 function controls(){
 
 if(keyDown("UP")){
-
-player1.y=player1.y-4;
+  player1.y=player1.y-4;
 
 }
 
 if(keyDown("DOWN")){
-
   player1.y=player1.y+4;
-  
   }
 
 if(keyDown("RIGHT")){
-
   player1.x=player1.x+4;
-    
   }
 
 if(keyDown("LEFT")){
-
   player1.x=player1.x-4;
       
   }
@@ -124,17 +119,32 @@ if(keyDown("LEFT")){
 }
 
 function collide(body, sprite){
-
- if(body!=null){
+ if(body!=null && sprite !=null){
 
   var d = dist(body.position.x, body.position.y, sprite.position.x, sprite.position.y);
-
   if(d<=20){
-
-   link = new Link(ball, player1);
-
+    return true;
+    
+    } 
+    else{
+    return false;
     }
-
   }
 
 }
+
+//quebrar a ligação
+function drop(){
+
+  //rope é a variavel corda
+  rope.break();
+ // link.detach();
+  link = null;
+
+}
+
+function kickBall(){
+
+  Matter.Body.applyForce(ball, {x: 0, y: 0}, {x: 0.5, y: 2.0});
+  
+  }
